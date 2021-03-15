@@ -212,11 +212,11 @@ def merge_close(sunspots, close_spots, img, sunspots_history):
 
         if len(union_points) > 2:
 
-            # Union point indices 
+            # Индексы точек объединения
             up1 = union_points[0]
             up2 = union_points[-1]
 
-            # Getting points to draw a spline 
+            # Получение точек для построения сплайна
             # -------------------------------------------------------------------------------------
 
             line_one_1 = get_neighbors(spot_one['cnt'], up1[0], 'ccw', 15)[::-1]
@@ -232,7 +232,7 @@ def merge_close(sunspots, close_spots, img, sunspots_history):
                 cv2.circle(img_points, (l[0][0], l[0][1]), 1, (150, 150, 150), 2)
             for l in line_one:
                 cv2.circle(img_points, (l[0][0], l[0][1]), 1, (150, 150, 150), 2)
-            # Spline
+            # Сплайн
             if len(line_one) > 3:
                 xnew, ynew = spline(line_one, len(line_one_1))
                 l = np.unique(np.array(np.c_[xnew, ynew]), axis=0)
@@ -249,7 +249,7 @@ def merge_close(sunspots, close_spots, img, sunspots_history):
 
             # -------------------------------------------------------------------------------------
 
-            # Change contour 
+            # Изменение контура
             cnt_part_1 = get_cnt_piece(spot_one['cnt'], up2[0], up1[0], 'cw')[1]
             cnt_part_2 = get_cnt_piece(spot_two['cnt'], up1[1], up2[1], 'cw')[1]
             # print(spot_one['cnt'][up1[0]], spot_two['cnt'][up1[1]], line_one[0], line_one[-1])
@@ -278,18 +278,18 @@ sdoaia171 = plt.get_cmap('sdoaia171')
 
 def detect_flare(fits_img_one, fits_img_two):
     spots = []
-    # difference between processed images 
+    # смотрим разницу между обработанными изображениями
     diff = cv2.absdiff(preprocessing(fits_img_two), preprocessing(fits_img_one))
 
-    # morphological operations to remove unnecessary trash 
+    # морфологические операции, чтобы убрать лишний мусор
     diff = cv2.morphologyEx(diff, cv2.MORPH_OPEN, np.ones((3, 3)), iterations=2)
     diff = cv2.morphologyEx(diff, cv2.MORPH_CLOSE, np.ones((3, 3)), iterations=1)
 
-    # search for contours with a large area 
+    # поиск контуров с большой площадью
     cnts, _ = cv2.findContours(diff.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = [cnt for cnt in cnts if cv2.contourArea(cnt) >= 500]
 
-    # if we find something big 
+    # если обнаружили что-то большое
     if len(cnts) > 0:
         x = y = []
         for cnt in cnts:
@@ -306,7 +306,7 @@ def detect_flare(fits_img_one, fits_img_two):
 
 def accum(files, spots):
     # al = cv2.bitwise_or(al, diff)
-    # print(np.var(img_next)) -- sometimes garbage comes in, you can clean it like this 
+    # print(np.var(img_next)) -- иногда приходит мусор, его можно почистить вот так
     sum_contour = np.zeros((4096, 4096), dtype='uint8')
     print("---", len(files))
     for i in range(0, len(files)):

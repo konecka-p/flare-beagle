@@ -8,7 +8,7 @@ executors = {
 }
 
 # job_defaults = {
-#     'coalesce': False, 
+#     'coalesce': False,  # Объединение
 #     'max_instances': 5
 # }
 

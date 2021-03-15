@@ -10,6 +10,7 @@ from get_jsoc_data import download_aia_3m, download_aia_12s,  download_hmi_mag_4
 
 def get_aia_3m():
     if storeDB.aia171_3m.count_documents({}) == 0:
+        # вот тут надо взять ту дату, которая вернулась рельная с запроса.
         download_date = str(datetime(2013, 9, 29, 22, 0, 0, 1))
         record = {'download_date' : download_date, 'date': datetime.utcnow()}
         storeDB.aia171_3m.insert_one(record).inserted_id
@@ -20,6 +21,7 @@ def get_aia_3m():
         storeDB.aia171_3m.insert_one(record).inserted_id
 
     file_name = download_aia_3m(download_date, 171, 'downloads/test_aia3m')
+    #тут надо перезаписать дату
     # db_schedule.aia171_3m.update_one({'download_date': download_date}, {'$set': {'downloaded': True},
     #                                                                     {'file_name' : file_name}}, upsert=True)
 
